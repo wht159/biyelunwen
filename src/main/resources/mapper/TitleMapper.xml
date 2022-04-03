@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitao.springboot.mapper.TitleMapper">
+
+    <resultMap id="pageTitle" type="com.haitao.springboot.entity.Title">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="difficulty" property="difficulty" />
+        <result column="type" property="type" />
+        <result column="source" property="source" />
+        <result column="brief" property="brief" />
+        <result column="tea_name" property="tea_name" />
+    </resultMap>
+
+    <select id="pageTitle" resultMap="pageTitle">
+        select title.* , tea.`name`as tea_name  FROM sys_title title
+        LEFT JOIN sys_teacher tea
+        ON title.tea_num = tea.tno
+        where  title.stu_num is  null or title.stu_num = ''
+    </select>
+
+    <resultMap id="titleResult" type="com.haitao.springboot.entity.Title">
+        <result column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="difficulty" property="difficulty" />
+        <result column="type" property="type" />
+        <result column="source" property="source" />
+        <result column="brief" property="brief" />
+        <result column="tea_name" property="tea_name" />
+        <result column="stu_name" property="stu_name" />
+    </resultMap>
+
+    <select id="getResult" resultMap="titleResult">
+        select title.* , tea.name as tea_name, stu.name as stu_name
+            FROM sys_title title
+            LEFT JOIN sys_teacher tea
+            ON tea.tno = title.tea_num
+            LEFT JOIN sys_student stu
+            ON stu.sno = title.stu_num
+            <where>
+                <if test="stuNum != null and stuNum != ''">
+                    title.stu_num = #{stuNum}
+                </if>
+                <if test="teaNum != null and teaNum != ''">
+                    title.tea_num = #{teaNum}
+                    and title.stu_num != ''
+                </if>
+            </where>
+
+    </select>
+
+
+
+
+</mapper>

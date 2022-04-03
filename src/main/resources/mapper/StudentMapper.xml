@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitao.springboot.mapper.StudentMapper">
+
+    <resultMap id="pageStudent" type="com.haitao.springboot.entity.Student">
+        <result column="id" property="id" />
+        <result column="sno" property="sno" />
+        <result column="name" property="name" />
+        <result column="sex" property="sex" />
+        <result column="dept" property="dept" />
+        <result column="classes" property="classes" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="tea_name" property="tea_name" />
+    </resultMap>
+
+    <select id="getStuPage" resultMap="pageStudent">
+        select stu.* , tea.name as tea_name
+        FROM sys_student stu
+        LEFT JOIN sys_student_teacher st
+        ON st.stu_num = stu.sno
+        LEFT JOIN sys_teacher tea
+        ON st.tea_num = tea.tno
+        <where>
+            <if test="name != null and name != ''">
+            and stu.name like concat('%', #{name} ,'%')
+            </if>
+            <if test="sno != null and sno != ''">
+            and stu.sno like concat('%', #{sno} ,'%')
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="StudentByTeaId" type="com.haitao.springboot.entity.Student">
+        <result column="id" property="id" />
+        <result column="sno" property="sno" />
+        <result column="name" property="name" />
+        <result column="sex" property="sex" />
+        <result column="dept" property="dept" />
+        <result column="classes" property="classes" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <result column="title_name" property="titleName" />
+        <result column="type" property="type" />
+        <result column="difficulty" property="difficulty" />
+        <result column="score" property="score" />
+
+    </resultMap>
+
+    <select id="getStudentByTeaNum" resultMap="StudentByTeaId">
+        select stu.* , title.name AS title_name , title.type , title.difficulty ,title.score
+        FROM sys_student stu
+        LEFT JOIN sys_student_teacher  st
+        ON st.stu_num = stu.sno
+        LEFT JOIN sys_title title
+        ON title.stu_num = stu.sno
+        where st.tea_num = #{tea_num}
+    </select>
+
+</mapper>

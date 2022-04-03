@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitao.springboot.mapper.TeacherMapper">
+
+    <resultMap id="pageStudent" type="com.haitao.springboot.entity.Teacher">
+        <result column="id" property="id" />
+        <result column="tno" property="tno" />
+        <result column="name" property="name" />
+        <result column="sex" property="sex" />
+        <result column="dept" property="dept" />
+        <result column="title" property="title" />
+        <result column="phone" property="phone" />
+        <result column="email" property="email" />
+        <collection property="students" javaType="java.util.ArrayList" ofType="com.haitao.springboot.entity.Student">
+            <result column="sno" property="sno" />
+            <result column="stu_name" property="name" />
+        </collection>
+    </resultMap>
+
+    <select id="getTeaPage" resultMap="pageStudent">
+        select tea.* , stu.sno as sno, stu.name as stu_name
+        FROM sys_teacher tea
+        LEFT JOIN sys_student_teacher st
+        ON st.tea_num = tea.tno
+        LEFT JOIN sys_student stu
+        ON stu.sno = st.stu_num
+        <where>
+            <if test="name != null and name != ''">
+                and tea.name like concat('%', #{name} ,'%')
+            </if>
+            <if test="tno != null and tno != ''">
+                and tea.tno like concat('%', #{tno} ,'%')
+            </if>
+        </where>
+    </select>
+
+    <resultMap id="StuProposal" type="com.haitao.springboot.entity.StuProposal">
+        <result column="sno" property="sno" />
+        <result column="stu_name" property="stuName" />
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="state" property="state" />
+        <result column="url" property="url" />
+    </resultMap>
+
+
+    <select id="GetStuProposalInfo" resultMap="StuProposal">
+        select	st.stu_num as sno , stu.`name` as stu_name , pro.*,v.state
+        FROM sys_student_teacher st
+        LEFT JOIN sys_proposal pro
+        ON pro.stu_num = st.stu_num
+        LEFT JOIN sys_student stu
+        ON stu.sno = pro.stu_num
+        LEFT JOIN sys_verify v
+        ON v.file_id = pro.id
+        WHERE st.tea_num = #{teaNum} AND pro.stu_num IS NOT NULL
+    </select>
+
+    <select id="GetStuPaperInfo" resultMap="StuProposal">
+        select	st.stu_num as sno , stu.`name` as stu_name , pap.*,v.state
+        FROM sys_student_teacher st
+        LEFT JOIN sys_paper pap
+        ON pap.stu_num = st.stu_num
+        LEFT JOIN sys_student stu
+        ON stu.sno = pap.stu_num
+        LEFT JOIN sys_verify v
+        ON v.file_id = pap.id
+        WHERE st.tea_num = #{teaNum} AND pap.stu_num IS NOT NULL
+    </select>
+
+</mapper>

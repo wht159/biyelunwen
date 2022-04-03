@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.haitao.springboot.mapper.PaperMapper">
+
+    <select id="getVrfStateByStuNum" resultType="boolean">
+        select  verify.state AS state
+        FROM sys_paper paper
+        LEFT JOIN sys_verify verify
+        ON verify.file_id = paper.id
+        WHERE stu_num = #{stuNum} ORDER BY verify.time DESC
+    </select>
+</mapper>
