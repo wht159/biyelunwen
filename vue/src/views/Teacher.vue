@@ -144,7 +144,8 @@ export default {
   },
   methods: {
     lookStudents(students) {
-      console.log(students)
+
+
       this.Vis = true
       this.students = students
     },
@@ -194,7 +195,6 @@ export default {
       })
     },
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val
     },
     delBatch() {
@@ -215,13 +215,11 @@ export default {
     },
 
     handleSizeChange(pageSize) {
-      console.log(pageSize)
       this.pageSize = pageSize
       this.load()
     },
 
     handleCurrentChange(pageNum) {
-      console.log(pageNum)
       this.pageNum = pageNum
       this.load()
     },

@@ -49,7 +49,6 @@ export default {
   methods: {
     onSubmit() {
       this.form.teaNum = localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).stNum : ""
-      console.log(this.form)
       this.request.post("/title", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("发布成功")
@@ -61,10 +60,6 @@ export default {
         }
       })
     },
-    load(){
-      console.log("213")
-    }
-
   }
 
 

@@ -197,7 +197,7 @@ export default {
 
     saveSelect(){
       this.selectTeaform.tea_id = this.teacher
-      console.log(this.selectTeaform)
+
       this.request.post("/user/student-teacher", this.selectTeaform).then(res => {
         if (res.code === '200') {
           this.$message.success("设置成功")
@@ -228,7 +228,6 @@ export default {
       })
     },
     handleSelectionChange(val) {
-      console.log(val)
       this.multipleSelection = val
     },
     delBatch() {
@@ -249,13 +248,11 @@ export default {
     },
 
     handleSizeChange(pageSize) {
-      console.log(pageSize)
       this.pageSize = pageSize
       this.load()
     },
 
     handleCurrentChange(pageNum) {
-      console.log(pageNum)
       this.pageNum = pageNum
       this.load()
     },

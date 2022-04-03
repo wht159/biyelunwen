@@ -126,7 +126,6 @@ export default {
     load() {
       if(this.date != ''){
         this.date = moment(this.date).format('YYYY-MM-DD')
-        console.log(this.date)
       }
       this.request.get("/news/page", {
         params: {
@@ -143,7 +142,6 @@ export default {
     },
     save() {
       this.request.post("/news", this.form).then(res => {
-        console.log(res)
         if (res.code === '200') {
           this.$message.success("保存成功")
           this.dialogFormVisible = false
@@ -197,7 +195,6 @@ export default {
       this.load()
     },
     dateFormat: function(row, column) {
-      console.log(row, column)
       const date = row[column.property]
       if (date === undefined) {
         return ''

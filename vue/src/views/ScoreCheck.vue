@@ -92,7 +92,6 @@ export default {
       this.scoreFormVisible = true
     },
     save(){
-      console.log(this.form)
       this.request.post("/title/editScore" ,this.form
       ).then(res => {
         if (res.code == '200'){

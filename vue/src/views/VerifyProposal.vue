@@ -119,7 +119,6 @@ export default {
       this.VerifyFormVisible = true
     },
     submit(){
-      console.log(this.form)
       this.request.post("/verify", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("审核成功")
