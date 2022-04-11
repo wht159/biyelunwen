@@ -45,6 +45,9 @@ public class Paper implements Serializable {
       @ApiModelProperty("学生学号")
       private String stuNum;
 
+      @ApiModelProperty("sim哈希值")
+      private String simHash;
+
       @ApiModelProperty("上传时间")
       private LocalDateTime createTime;
 

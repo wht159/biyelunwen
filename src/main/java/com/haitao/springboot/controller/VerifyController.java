@@ -22,6 +22,7 @@ import java.util.List;
  * @author 吴海韬
  * @since 2022-04-01
  */
+
 @RestController
 @RequestMapping("/verify")
 public class VerifyController {

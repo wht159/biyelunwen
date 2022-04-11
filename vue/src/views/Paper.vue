@@ -24,7 +24,7 @@
       <el-table-column type="selection" width="55" ></el-table-column>
       <el-table-column prop="id" label="编号" align="center"></el-table-column>
       <el-table-column prop="name" label="文件名" align="center"></el-table-column>
-      <el-table-column prop="size" label="学号" align="center"></el-table-column>
+      <el-table-column prop="size" label="文件大小" align="center"></el-table-column>
       <el-table-column prop="createTime" label="上传时间" align="center" :formatter="dateFormat"></el-table-column>
       <el-table-column label="下载" align="center">
         <template slot-scope="scope">

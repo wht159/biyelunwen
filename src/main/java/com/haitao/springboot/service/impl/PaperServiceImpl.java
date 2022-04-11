@@ -14,6 +14,8 @@ import com.haitao.springboot.mapper.PaperMapper;
 import com.haitao.springboot.mapper.TitleMapper;
 import com.haitao.springboot.service.IPaperService;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.haitao.springboot.utils.SimHashUtils;
+import com.haitao.springboot.utils.WordUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -71,12 +73,11 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
     }
 
     @Override
-    public Result uploadProposal(MultipartFile file, String stuNum) throws IOException {
+    public Result uploadPaper(MultipartFile file, String stuNum) throws IOException {
 
         QueryWrapper<Title> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("stu_num", stuNum);
         Title title = titleMapper.selectOne(queryWrapper);
-
         if(title != null){
             if(title.getIsVerify() == true){
                 String originalFilename = file.getOriginalFilename();
@@ -85,7 +86,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
 
                 // 定义一个文件唯一的标识码
                 String fileUUID = IdUtil.fastSimpleUUID() + StrUtil.DOT + type;
-                File uploadFile = new File(fileUploadPath + fileUUID);
+                String fileTotalPath  = fileUploadPath + fileUUID;
+                File uploadFile = new File(fileTotalPath);
                 // 判断配置的文件目录是否存在，若不存在则创建一个新的文件目录
                 File parentFile = uploadFile.getParentFile();
                 if(!parentFile.exists()) {
@@ -106,6 +108,8 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                     url = "http://" + serverIp + ":9090/proposal/" + fileUUID;
                 }
 
+                String simHash = getSimHash(fileTotalPath);
+
                 // 存储数据库
                 Paper savePaper = new Paper();
                 savePaper.setName(originalFilename);
@@ -113,6 +117,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
                 savePaper.setUrl(url);
                 savePaper.setMd5(md5);
                 savePaper.setStuNum(stuNum);
+                savePaper.setSimHash(simHash);
                 paperMapper.insert(savePaper);
                 return Result.success(url);
             }else return Result.error(Constants.CODE_400,"课题审核未通过");
@@ -130,6 +135,17 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         queryWrapper.eq("md5", md5);
         List<Paper> paperList = paperMapper.selectList(queryWrapper);
         return paperList.size() == 0 ? null : paperList.get(0);
+    }
+
+    /**
+     * 获取SimHash值
+     * @param uploadFile
+     * @return
+     * @throws IOException
+     */
+    private String getSimHash(String uploadFile) throws IOException {
+        String result= WordUtils.ReadDoc(uploadFile);
+        return SimHashUtils.getSimHash(result);
     }
 
 

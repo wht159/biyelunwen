@@ -19,5 +19,5 @@ public interface IPaperService extends IService<Paper> {
 
     Paper showPaperInfo(String stuNum);
 
-    Result uploadProposal(MultipartFile file, String stuNum) throws IOException;
+    Result uploadPaper(MultipartFile file, String stuNum) throws IOException;
 }

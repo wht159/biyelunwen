@@ -46,13 +46,6 @@ public class ProposalController {
     @Resource
     private IProposalService proposalService;
 
-    // 新增或者更新
-    @PostMapping
-    public Result save(@RequestBody Proposal proposal) {
-        proposalService.saveOrUpdate(proposal);
-        return Result.success();
-    }
-
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
         proposalService.removeById(id);

@@ -40,11 +40,12 @@
       <el-table-column label="操作"align="center" width="300" >
         <template slot-scope="scope">
           <el-button type="success" @click="handleVerify(scope.row.id)" v-if="scope.row.state == null">审核</el-button>
+          <el-button type="warning" @click="handleCheck(scope.row)" v-if="scope.row.state == null">查重</el-button>
         </template>
       </el-table-column>
     </el-table>
 
-    <!--    用户新增表单-->
+    <!--    审核信息-->
     <el-dialog title="审核信息" :visible.sync="VerifyFormVisible" width="30%" >
       <el-form label-width="80px" size="small">
         <el-form-item label="审核结果">
@@ -58,6 +59,39 @@
       <div slot="footer" class="dialog-footer">
         <el-button type="primary" @click="submit">提交</el-button>
       </div>
+    </el-dialog>
+
+    <el-dialog title="查重信息" :visible.sync="CheckFormVisible" width="50%" >
+      <el-table
+          :data="CheckFormData"
+          style="width: 100%">
+        <el-table-column
+            prop="name"
+            label="论文名称"
+            align="center"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="createTime"
+            label="提交时间"
+            align="center"
+            :formatter="dateFormat"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            prop="similarity"
+            label="相似度"
+            align="center"
+            width="180">
+        </el-table-column>
+        <el-table-column
+            label="文件下载"
+            align="center">
+          <template slot-scope="scope">
+            <el-button type="success" @click="download(scope.row.url)">下载</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
     </el-dialog>
 
   </div>
@@ -75,12 +109,15 @@ export default {
 
   data() {
     return {
+      CheckFormData:[],
+      CheckFormVisible:false,
       VerifyFormVisible:false,
       tableData: [],
       teaNum: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).stNum : "",
       form:{
         teaNum: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).stNum : ""
       },
+      CheckForm:{}
     }
   },
   created() {
@@ -95,6 +132,7 @@ export default {
         }
       }).then(res => {
         this.tableData = res.data
+        console.log(res.data)
       })
     },
     stateFormat(row) {
@@ -117,6 +155,26 @@ export default {
     handleVerify(id){
       this.form.fileId = id
       this.VerifyFormVisible = true
+    },
+
+    handleCheck(row){
+      this.request.get("/teacher/checkPaper" ,{
+        params: {
+          simHash : row.simHash,
+          stuNum : row.sno
+        }
+      }).then(res => {
+        if (res.code === '200'){
+          if (res.data != null){
+            this.CheckFormVisible = true
+            this.CheckFormData = res.data
+          }else {
+            this.$message.success("查重通过")
+          }
+        }else {
+          this.$message.error("查重失败")
+        }
+      })
     },
     submit(){
       console.log(this.form)

@@ -9,12 +9,10 @@ import java.util.Date;
 @Data
 @Getter
 @Setter
-public class StuProposal {
-    private String sno;
-    private String stuName;
-    private Integer id;
-    private Date createTime;
-    private Boolean state;
+public class checkResult {
+    private double similarity;
+    private String name;
+    private String simHash;
     private String url;
-
+    private Date createTime;
 }

@@ -31,12 +31,6 @@ public class PaperController {
     @Resource
     private IPaperService paperService;
 
-    // 新增或者更新
-    @PostMapping
-    public Result save(@RequestBody Paper paper) {
-        paperService.saveOrUpdate(paper);
-        return Result.success();
-    }
 
     @DeleteMapping("/{id}")
     public Result delete(@PathVariable Integer id) {
@@ -55,10 +49,6 @@ public class PaperController {
         return Result.success(paperService.list());
     }
 
-    @GetMapping("/{id}")
-    public Result findOne(@PathVariable Integer id) {
-        return Result.success(paperService.getById(id));
-    }
 
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
@@ -75,11 +65,13 @@ public class PaperController {
 
     @PostMapping("/upload")
     public Result upload(@RequestParam MultipartFile file, @RequestParam String stuNum) throws IOException {
-
-        System.out.println("文件"+file);
-        System.out.println("学号"+stuNum);
-        return  paperService.uploadProposal(file,stuNum);
+        return  paperService.uploadPaper(file,stuNum);
     }
+
+
+
+
+
 
 }
 

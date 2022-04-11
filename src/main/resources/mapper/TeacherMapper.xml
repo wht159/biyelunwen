@@ -34,12 +34,29 @@
         </where>
     </select>
 
-    <resultMap id="StuProposal" type="com.haitao.springboot.entity.StuProposal">
+    <resultMap id="StuProposal" type="com.haitao.springboot.entity.StuFile">
         <result column="sno" property="sno" />
         <result column="stu_name" property="stuName" />
         <result column="id" property="id" />
         <result column="create_time" property="createTime" />
         <result column="state" property="state" />
+        <result column="url" property="url" />
+    </resultMap>
+
+    <resultMap id="StuPaper" type="com.haitao.springboot.entity.StuFile">
+        <result column="sno" property="sno" />
+        <result column="stu_name" property="stuName" />
+        <result column="id" property="id" />
+        <result column="create_time" property="createTime" />
+        <result column="state" property="state" />
+        <result column="url" property="url" />
+        <result column="sim_hash" property="simHash" />
+    </resultMap>
+
+    <resultMap id="checkResult" type="com.haitao.springboot.entity.checkResult">
+        <result column="name" property="name" />
+        <result column="create_time" property="createTime" />
+        <result column="sim_hash" property="simHash" />
         <result column="url" property="url" />
     </resultMap>
 
@@ -56,8 +73,8 @@
         WHERE st.tea_num = #{teaNum} AND pro.stu_num IS NOT NULL
     </select>
 
-    <select id="GetStuPaperInfo" resultMap="StuProposal">
-        select	st.stu_num as sno , stu.`name` as stu_name , pap.*,v.state
+    <select id="GetStuPaperInfo" resultMap="StuPaper">
+        select	st.stu_num as sno , stu.`name` as stu_name , pap.* , v.state
         FROM sys_student_teacher st
         LEFT JOIN sys_paper pap
         ON pap.stu_num = st.stu_num
@@ -67,5 +84,12 @@
         ON v.file_id = pap.id
         WHERE st.tea_num = #{teaNum} AND pap.stu_num IS NOT NULL
     </select>
+
+
+    <select id="getSimHashes" resultMap="checkResult">
+        select sim_hash, name ,create_time,url
+        FROM sys_paper WHERE stu_num != #{stuNum}
+    </select>
+
 
 </mapper>

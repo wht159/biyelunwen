@@ -17,7 +17,7 @@
       </el-select>
       </el-form-item>
 
-      <el-form-item label="成绩" align="center" >
+      <el-form-item label="成绩" >
         <el-input v-model="form.score" style="width: 200px"></el-input>
       </el-form-item>
 

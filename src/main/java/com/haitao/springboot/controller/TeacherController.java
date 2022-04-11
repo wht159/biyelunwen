@@ -11,7 +11,9 @@ import com.haitao.springboot.service.ITeacherService;
 import com.haitao.springboot.entity.Teacher;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -73,7 +75,9 @@ public class TeacherController {
         return Result.success(teacherService.GetStuFileInfo(teaNum,fileType));
     }
 
-
-
+    @GetMapping("/checkPaper")
+    public Result checkPaper(@RequestParam String simHash, @RequestParam String stuNum){
+        return  Result.success(teacherService.checkPaper(simHash,stuNum));
+    }
 }
 
