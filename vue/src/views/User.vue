@@ -8,7 +8,9 @@
     </div>
 
     <div style="margin: 10px 0">
-      <el-button type="primary" @click="handleAdd">新增 <i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button type="primary" @click="adminAdd">新增用户<i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button type="primary" @click="studentAdd">新增学生<i class="el-icon-circle-plus-outline"></i></el-button>
+      <el-button type="primary" @click="teacherAdd">新增导师<i class="el-icon-circle-plus-outline"></i></el-button>
       <el-popconfirm
           class="ml-5"
           confirm-button-text='确定'
@@ -67,10 +69,11 @@
       </el-pagination>
     </div>
 
-    <!--    用户新增表单-->
+    <!--    修改表单-->
     <el-dialog title="用户信息" :visible.sync="dialogFormVisible" width="30%" >
 
       <el-form label-width="80px" size="small">
+
         <el-form-item label="用户名">
           <el-input v-model="form.username" autocomplete="off"></el-input>
         </el-form-item>
@@ -79,22 +82,125 @@
           <el-input v-model="form.password" autocomplete="off"></el-input>
         </el-form-item>
 
-        <el-form-item label="角色">
-          <el-select clearable v-model="form.role" placeholder="请选择角色" style="width: 100%">
-            <el-option v-for="item in roles" :key="item.username" :label="item.username" :value="item.flag"></el-option>
-          </el-select>
-        </el-form-item>
-
-        <el-form-item label="学号/工号" v-if="form.role != 'ROLE_ADMIN' ">
-          <el-input v-model="form.stNum" autocomplete="off" v-if="form.role != 'ROLE_ADMIN' "></el-input>
-        </el-form-item>
       </el-form>
 
       <div slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="save">确 定</el-button>
+        <el-button type="primary" @click="editSave">确 定</el-button>
       </div>
     </el-dialog>
 
+    <!--    新增admin表单-->
+    <el-dialog title="管理员信息" :visible.sync="AdminFormVisible" width="30%" >
+
+      <el-form label-width="80px" size="small">
+
+        <el-form-item label="用户名">
+          <el-input v-model="form.username" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="密码">
+          <el-input v-model="form.password" autocomplete="off"></el-input>
+        </el-form-item>
+
+      </el-form>
+          <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="adminSave">确 定</el-button>
+        </div>
+      </el-dialog>
+
+    <!--    新增Teacher表单-->
+    <el-dialog title="添加导师" :visible.sync="TeacherFormVisible" width="30%" >
+
+      <el-form label-width="80px" size="small">
+
+        <el-form-item label="用户名">
+          <el-input v-model="form.username" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="密码">
+          <el-input v-model="form.password" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-divider></el-divider>
+
+        <el-form-item label="工号">
+          <el-input v-model="teacherForm.tno" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="姓名">
+          <el-input v-model="teacherForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="性别">
+          <el-select v-model="teacherForm.sex" >
+            <el-option label="男" value="男"></el-option>
+            <el-option label="女" value="女"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="所在院系">
+          <el-input v-model="teacherForm.dept" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="职称">
+          <el-input v-model="teacherForm.title" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="邮箱">
+          <el-input v-model="teacherForm.email" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="联系电话">
+          <el-input v-model="teacherForm.phone" autocomplete="off"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="teacherSave">确 定</el-button>
+      </div>
+    </el-dialog>
+
+    <!--    新增Student表单-->
+    <el-dialog title="添加学生" :visible.sync="StudentFormVisible" width="30%" >
+
+      <el-form label-width="80px" size="small">
+
+        <el-form-item label="用户名">
+          <el-input v-model="form.username" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="密码">
+          <el-input v-model="form.password" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-divider></el-divider>
+
+        <el-form-item label="姓名">
+          <el-input v-model="studentForm.name" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="学号">
+          <el-input v-model="studentForm.sno" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="性别">
+          <el-select v-model="studentForm.sex" >
+            <el-option label="男" value="男"></el-option>
+            <el-option label="女" value="女"></el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="所在院系">
+          <el-input v-model="studentForm.dept" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="邮箱">
+          <el-input v-model="studentForm.email" autocomplete="off"></el-input>
+        </el-form-item>
+
+        <el-form-item label="联系电话">
+          <el-input v-model="studentForm.phone" autocomplete="off"></el-input>
+        </el-form-item>
+
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="studentSave">确 定</el-button>
+      </div>
+    </el-dialog>
 
   </div>
 </template>
@@ -108,6 +214,8 @@ export default {
 
   data() {
     return {
+      studentForm:{},
+      teacherForm:{},
       stNum:"",
       serverIp: serverIp,
       tableData: [],
@@ -117,6 +225,9 @@ export default {
       username:"",
       form: {},
       roles:[],
+      StudentFormVisible:false,
+      TeacherFormVisible:false,
+      AdminFormVisible:false,
       dialogFormVisible: false,
       multipleSelection: [],
       vis: false,
@@ -153,7 +264,7 @@ export default {
 
     },
 
-    save() {
+    editSave() {
       this.request.post("/user", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("保存成功")
@@ -164,9 +275,19 @@ export default {
         }
       })
     },
-    handleAdd() {
-      this.dialogFormVisible = true
+    adminAdd() {
+      this.AdminFormVisible = true
       this.form = {}
+    },
+    studentAdd() {
+      this.StudentFormVisible = true
+      this.form = {}
+      this.studentForm = {}
+    },
+    teacherAdd() {
+      this.TeacherFormVisible = true
+      this.form = {}
+      this.teacherForm = {}
     },
     handleEdit(row) {
       this.form = JSON.parse(JSON.stringify(row))
@@ -212,7 +333,20 @@ export default {
       this.pageNum = pageNum
       this.load()
     },
-
+    adminSave(){
+      this.form.role = "ROLE_ADMIN"
+      console.log(this.form)
+    },
+    teacherSave(){
+      this.form.role = "ROLE_TEACHER"
+      console.log(this.form)
+      console.log(this.teacherForm)
+    },
+    studentSave(){
+      this.form.role = "ROLE_STUDENT"
+      console.log(this.form)
+      console.log(this.studentForm)
+    }
   }
 }
 </script>
