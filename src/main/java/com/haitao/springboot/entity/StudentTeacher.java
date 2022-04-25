@@ -7,7 +7,7 @@ import lombok.Data;
 @Data
 public class StudentTeacher {
 
-    private Integer stu_id;
-    private Integer tea_id;
+    private Integer stu_num;
+    private Integer tea_num;
 
 }

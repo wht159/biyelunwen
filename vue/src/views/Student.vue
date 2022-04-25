@@ -5,6 +5,17 @@
       <el-input style="width: 200px" placeholder="请输入学号" suffix-icon="el-icon-position" class="ml-5" v-model="sno"></el-input>
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
+      <el-popconfirm
+          class="ml-5"
+          confirm-button-text='确定'
+          cancel-button-text='我再想想'
+          icon="el-icon-info"
+          icon-color="red"
+          title="您确定批量删除这些数据吗？"
+          @confirm="delBatch"
+      >
+        <el-button type="danger" slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
+      </el-popconfirm>
     </div>
 
 
@@ -22,10 +33,21 @@
       <el-table-column prop="tea_name" label="指导老师" align="center"></el-table-column>
 
 
-      <el-table-column label=""  width="350" align="center">
+      <el-table-column label="操作"  width="350" align="center">
         <template slot-scope="scope">
           <el-button type="warning" @click="handleSelectTeacher(scope.row)"> 选择指导老师 </el-button>
           <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
+          <el-popconfirm
+              class="ml-5"
+              confirm-button-text='确定'
+              cancel-button-text='我再想想'
+              icon="el-icon-info"
+              icon-color="red"
+              title="您确定删除吗？"
+              @confirm="del(scope.row.id)"
+          >
+            <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -84,7 +106,7 @@
     <el-dialog title="选择指导老师" :visible.sync="selectTeacherVis" width="30%" >
       <el-form>
         <el-select clearable v-model="teacher" placeholder="请选择老师" style="width: 100%">
-          <el-option v-for="item in teachers" :key="item.name" :label="item.name" :value="item.id"></el-option>
+          <el-option v-for="item in teachers" :key="item.name" :label="item.name" :value="item.tno"></el-option>
         </el-select>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -125,11 +147,9 @@ export default {
       role:localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).role : ""
     }
   },
-
   created() {
     this.load()
   },
-
   methods: {
     load() {
       this.request.get("/student/page", {
@@ -139,18 +159,13 @@ export default {
           name: this.name,
           sno: this.sno,
         }
-
       }).then(res => {
-
         this.tableData = res.data.records
         this.total = res.data.total
-
       })
-
       this.request.get("/teacher").then(res => {
         this.teachers = res.data
       })
-
     },
     save() {
       this.request.post("/student", this.form).then(res => {
@@ -163,10 +178,8 @@ export default {
         }
       })
     },
-
     saveSelect(){
-      this.selectTeaform.tea_id = this.teacher
-
+      this.selectTeaform.tea_num = this.teacher
       this.request.post("/user/student-teacher", this.selectTeaform).then(res => {
         if (res.code === '200') {
           this.$message.success("设置成功")
@@ -186,7 +199,6 @@ export default {
       this.form = JSON.parse(JSON.stringify(row))
       this.dialogFormVisible = true
     },
-
     handleSelectionChange(val) {
       this.multipleSelection = val
     },
@@ -209,19 +221,41 @@ export default {
     exp() {
       window.open(`http://${serverIp}:9090/user/export`)
     },
+
     handleExcelImportSuccess() {
       this.$message.success("导入成功")
       this.load()
     },
+
     handleSelectTeacher(row){
-      this.selectTeaform.stu_id = JSON.parse(JSON.stringify(row.id))
+      this.selectTeaform.stu_num = JSON.parse(JSON.stringify(row.sno))
       this.selectTeacherVis = true
+    },
+
+    del(id) {
+      this.request.delete("/student/" + id).then(res => {
+        if (res.code === '200') {
+          this.$message.success("删除成功")
+          this.load()
+        } else {
+          this.$message.error("删除失败")
+        }
+      })
+    },
+    delBatch() {
+      let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
+      this.request.post("/student/del/batch", ids).then(res => {
+        if (res.code === '200') {
+          this.$message.success("批量删除成功")
+          this.load()
+        } else {
+          this.$message.error("批量删除失败")
+        }
+      })
     },
   }
 }
 </script>
-
-
 <style>
 .headerBg {
   background: #eee!important;

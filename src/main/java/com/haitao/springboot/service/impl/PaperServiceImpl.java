@@ -78,6 +78,7 @@ public class PaperServiceImpl extends ServiceImpl<PaperMapper, Paper> implements
         QueryWrapper<Title> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("stu_num", stuNum);
         Title title = titleMapper.selectOne(queryWrapper);
+
         if(title != null){
             if(title.getIsVerify() == true){
                 String originalFilename = file.getOriginalFilename();

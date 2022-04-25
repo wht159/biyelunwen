@@ -50,7 +50,7 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         List<checkResult> simHashes  = teacherMapper.getSimHashes(stuNum);
         List<checkResult> checkPapers  = new ArrayList<>();
         for (checkResult DateSimHash : simHashes) {
-            if (HammingUtils.getSimilarity(DateSimHash.getSimHash(), simHash) > 0.80) {
+            if (HammingUtils.getSimilarity(DateSimHash.getSimHash(), simHash) > 0.20) {
                 double similarity = HammingUtils.getSimilarity(DateSimHash.getSimHash(), simHash);
                 DateSimHash.setSimilarity(similarity);
                 checkPapers.add(DateSimHash);

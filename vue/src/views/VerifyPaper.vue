@@ -39,20 +39,20 @@
 
       <el-table-column label="操作"align="center" width="300" >
         <template slot-scope="scope">
-          <el-button type="success" @click="handleVerify(scope.row.id)" v-if="scope.row.state == null">审核</el-button>
-          <el-button type="warning" @click="handleCheck(scope.row)" v-if="scope.row.state == null">查重</el-button>
+          <el-button type="success" @click="handleVerify(scope.row.id)" v-if="scope.row.state != true">审核</el-button>
+          <el-button type="warning" @click="handleCheck(scope.row)" >查重</el-button>
         </template>
       </el-table-column>
     </el-table>
 
     <!--    审核信息-->
     <el-dialog title="审核信息" :visible.sync="VerifyFormVisible" width="30%" >
-      <el-form label-width="80px" size="small">
-        <el-form-item label="审核结果">
-          <el-radio v-model="form.state" label="true" border>通过</el-radio>
+      <el-form label-width="80px" size="small" :model="form" :rules="rules" ref="form">
+        <el-form-item label="审核结果" prop="state">
+          <el-radio v-model="form.state" label="true" border >通过</el-radio>
           <el-radio v-model="form.state" label="false" border>不通过</el-radio>
         </el-form-item>
-        <el-form-item label="审核意见">
+        <el-form-item label="审核意见" prop="comment">
           <el-input type="textarea":rows="7" v-model="form.comment" style="width: 100%" ></el-input>
         </el-form-item>
       </el-form>
@@ -109,6 +109,10 @@ export default {
 
   data() {
     return {
+      rules:{
+        state: {required: true, message: '请选择审核结果', trigger: 'change'},
+        comment:{required: true, message: '请输入审核意见', trigger: 'blur'},
+      },
       CheckFormData:[],
       CheckFormVisible:false,
       VerifyFormVisible:false,
@@ -138,9 +142,9 @@ export default {
     stateFormat(row) {
       if (row.state === true) {
         return '审核通过'
-      } else if (row.state === false){
+      } else{
         return '未通过'
-      }else return '待审核'
+      }
     },
     dateFormat: function(row, column) {
       const date = row[column.property]
@@ -177,7 +181,8 @@ export default {
       })
     },
     submit(){
-      console.log(this.form)
+      this.$refs['form'].validate((valid) => {
+        if (valid) {  // 表单校验合法
       this.request.post("/verify", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("审核成功")
@@ -189,6 +194,8 @@ export default {
           this.form = {}
         }
       })
+        }
+      });
     }
   }
 }

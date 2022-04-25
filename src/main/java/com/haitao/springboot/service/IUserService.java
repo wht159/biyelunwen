@@ -30,7 +30,7 @@ public interface IUserService extends IService<User> {
 
     void setStudentTeacher(StudentTeacher studentTeacher);
 
-    void saveOrUpdateUser(User user);
+//    void saveOrUpdateUser(User user);
 
     Object findByStNum(String stNum, String role);
 }

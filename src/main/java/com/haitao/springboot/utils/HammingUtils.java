@@ -30,6 +30,7 @@ public class HammingUtils {
      * @param simHash2
      * @return 相似度
      */
+
     public static double getSimilarity(String simHash1, String simHash2) {
         // 通过 simHash1 和 simHash2 获得它们的海明距离
         int distance = getHammingDistance(simHash1, simHash2);

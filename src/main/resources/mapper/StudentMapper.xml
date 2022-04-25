@@ -8,7 +8,6 @@
         <result column="name" property="name" />
         <result column="sex" property="sex" />
         <result column="dept" property="dept" />
-        <result column="classes" property="classes" />
         <result column="phone" property="phone" />
         <result column="email" property="email" />
         <result column="tea_name" property="tea_name" />
@@ -37,7 +36,6 @@
         <result column="name" property="name" />
         <result column="sex" property="sex" />
         <result column="dept" property="dept" />
-        <result column="classes" property="classes" />
         <result column="phone" property="phone" />
         <result column="email" property="email" />
         <result column="title_name" property="titleName" />

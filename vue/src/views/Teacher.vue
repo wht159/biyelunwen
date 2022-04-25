@@ -5,6 +5,17 @@
       <el-input style="width: 200px" placeholder="请输入工号" suffix-icon="el-icon-position" class="ml-5" v-model="tno"></el-input>
       <el-button class="ml-5" type="primary" @click="load">搜索</el-button>
       <el-button type="warning" @click="reset">重置</el-button>
+      <el-popconfirm
+          class="ml-5"
+          confirm-button-text='确定'
+          cancel-button-text='我再想想'
+          icon="el-icon-info"
+          icon-color="red"
+          title="您确定批量删除这些数据吗？"
+          @confirm="delBatch"
+      >
+        <el-button type="danger" slot="reference">批量删除 <i class="el-icon-remove-outline"></i></el-button>
+      </el-popconfirm>
     </div>
 
 
@@ -24,6 +35,17 @@
         <template slot-scope="scope">
           <el-button type="primary" @click="lookStudents(scope.row.students)" >查看学生 <i class="el-icon-document"></i></el-button>
           <el-button type="success" @click="handleEdit(scope.row)">编辑 <i class="el-icon-edit"></i></el-button>
+          <el-popconfirm
+              class="ml-5"
+              confirm-button-text='确定'
+              cancel-button-text='我再想想'
+              icon="el-icon-info"
+              icon-color="red"
+              title="您确定删除吗？"
+              @confirm="del(scope.row.id)"
+          >
+            <el-button type="danger" slot="reference">删除 <i class="el-icon-remove-outline"></i></el-button>
+          </el-popconfirm>
         </template>
       </el-table-column>
     </el-table>
@@ -114,8 +136,6 @@ export default {
   },
   methods: {
     lookStudents(students) {
-
-
       this.Vis = true
       this.students = students
     },
@@ -180,7 +200,28 @@ export default {
     handleExcelImportSuccess() {
       this.$message.success("导入成功")
       this.load()
-    }
+    },
+    del(id) {
+      this.request.delete("/teacher/" + id).then(res => {
+        if (res.code === '200') {
+          this.$message.success("删除成功")
+          this.load()
+        } else {
+          this.$message.error("删除失败")
+        }
+      })
+    },
+    delBatch() {
+      let ids = this.multipleSelection.map(v => v.id)  // [{}, {}, {}] => [1,2,3]
+      this.request.post("/teacher/del/batch", ids).then(res => {
+        if (res.code === '200') {
+          this.$message.success("批量删除成功")
+          this.load()
+        } else {
+          this.$message.error("批量删除失败")
+        }
+      })
+    },
   }
 }
 </script>

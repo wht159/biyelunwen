@@ -1,7 +1,8 @@
 <template>
   <div style="color: #666;font-size: 14px;">
     <div style="padding-bottom: 20px">
-      <b>欢迎你！{{ user.nickname }}</b>
+      <h1 style="text-align: -webkit-center; font-size: 25px;">毕业论文管理系统</h1>
+      <b>欢迎你！{{ name }}</b>
     </div>
 
     <div style="height: 1px; background: #ddd; margin: 20px 0"/>
@@ -38,8 +39,25 @@ export default {
   name: "Home",
   data() {
     return {
+      name:'',
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
     }
+  },
+  created() {
+    this.load()
+  },
+  methods: {
+    load() {
+      this.request.get("/user/stNum", {
+        params: {
+          stNum : this.user.stNum,
+          role :this.user.role
+        }
+      }).then(res => {
+        this.name = res.data.name
+      })
+    },
+
   }
 }
 </script>

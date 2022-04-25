@@ -86,13 +86,15 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
             one = new User();
             BeanUtil.copyProperties(userDTO, one, true);
             // 默认一个普通用户的角色
-            one.setRole(RoleEnum.ROLE_USER.toString());
+//            one.setRole(RoleEnum.ROLE_USER.toString());
             save(one);  // 把 copy完之后的用户对象存储到数据库
         } else {
             throw new ServiceException(Constants.CODE_600, "用户已存在");
         }
         return one;
     }
+
+
 
     @Override
     public void updatePassword(UserPasswordDTO userPasswordDTO) {
@@ -115,39 +117,39 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 //    设置学生老师表
     @Override
     public void setStudentTeacher(StudentTeacher studentTeacher) {
-        int stu_id = studentTeacher.getStu_id();
-        int tea_id = studentTeacher.getTea_id();
+        int stu_num = studentTeacher.getStu_num();
+        int tea_num = studentTeacher.getTea_num();
 
-        if(null == stuTeaMapper.getTeaId(stu_id)){
-            stuTeaMapper.addStuTea(stu_id,tea_id);
+        if(null == stuTeaMapper.getTeaNum(stu_num)){
+            stuTeaMapper.addStuTea(stu_num,tea_num);
         }else {
-            if(stuTeaMapper.getTeaId(stu_id) != tea_id)
-                stuTeaMapper.update(stu_id,tea_id);
+            if(stuTeaMapper.getTeaNum(stu_num) != tea_num)
+                stuTeaMapper.update(stu_num,tea_num);
         }
 
     }
 
-    @Override
-    public void saveOrUpdateUser(User user) {
-
-            if (user.getRole().equals("ROLE_STUDENT")){
-                QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("sno", user.getStNum());
-                if(studentMapper.selectCount(queryWrapper)!= 0){
-                    saveOrUpdate(user);
-                }else {
-                    throw new ServiceException(Constants.CODE_600, "查找不到学生工号");
-                }
-            }else if(user.getRole().equals("ROLE_TEACHER")){
-                QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
-                queryWrapper.eq("tno", user.getStNum());
-                if(teacherMapper.selectCount(queryWrapper)!= 0){
-                     saveOrUpdate(user);
-                }else {
-                    throw new ServiceException(Constants.CODE_600, "查找不到教师工号");
-                }
-            }else saveOrUpdate(user);
-    }
+//    @Override
+//    public void saveOrUpdateUser(User user) {
+//
+//            if (user.getRole().equals("ROLE_STUDENT")){
+//                QueryWrapper<Student> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("sno", user.getStNum());
+//                if(studentMapper.selectCount(queryWrapper)!= 0){
+//                    saveOrUpdate(user);
+//                }else {
+//                    throw new ServiceException(Constants.CODE_600, "查找不到学生工号");
+//                }
+//            }else if(user.getRole().equals("ROLE_TEACHER")){
+//                QueryWrapper<Teacher> queryWrapper = new QueryWrapper<>();
+//                queryWrapper.eq("tno", user.getStNum());
+//                if(teacherMapper.selectCount(queryWrapper)!= 0){
+//                     saveOrUpdate(user);
+//                }else {
+//                    throw new ServiceException(Constants.CODE_600, "查找不到教师工号");
+//                }
+//            }else saveOrUpdate(user);
+//    }
 
     @Override
     public Object findByStNum(String stNum, String role) {

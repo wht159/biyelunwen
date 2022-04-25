@@ -46,7 +46,6 @@ public class UserController {
     @Resource
     private IUserService userService;
 
-
 //    登录
     @PostMapping("/login")
     public Result login(@RequestBody UserDTO userDTO) {
@@ -58,13 +57,13 @@ public class UserController {
         UserDTO dto = userService.login(userDTO);
         return Result.success(dto);
     }
-
-//    注册（还没弄好）
+//    注册
     @PostMapping("/register")
     public Result register(@RequestBody UserDTO userDTO) {
         String username = userDTO.getUsername();
         String password = userDTO.getPassword();
-        if (StrUtil.isBlank(username) || StrUtil.isBlank(password)) {
+        String stNum = userDTO.getStNum();
+        if (StrUtil.isBlank(username) || StrUtil.isBlank(password) || StrUtil.isBlank(stNum)) {
             return Result.error(Constants.CODE_400, "参数错误");
         }
         return Result.success(userService.register(userDTO));
@@ -76,19 +75,17 @@ public class UserController {
         if (user.getId() == null && user.getPassword() == null) {  // 新增用户默认密码
             user.setPassword("123");
         }
-        if(user.getRole().equals("ROLE_ADMIN") ){
-            return Result.success(userService.saveOrUpdate(user));
-        }else {
-            if(!"".equals(user.getStNum()) && user.getStNum() != null){
-                userService.saveOrUpdateUser(user);
-                return Result.success();
-            } else {
-                return Result.error(Constants.CODE_400,"参数不能为空");
-            }
-        }
-
-
-
+        return Result.success(userService.saveOrUpdate(user));
+//        if(user.getRole().equals("ROLE_ADMIN") ){
+//            return Result.success(userService.saveOrUpdate(user));
+//        }else {
+//            if(!"".equals(user.getStNum()) && user.getStNum() != null){
+//                userService.saveOrUpdateUser(user);
+//                return Result.success();
+//            } else {
+//                return Result.error(Constants.CODE_400,"参数不能为空");
+//            }
+//        }
     }
     /**
      * 修改密码
@@ -131,18 +128,15 @@ public class UserController {
         return Result.success(list);
     }
 
-
     @GetMapping("/{id}")
     public Result findOne(@PathVariable Integer id) {
         return Result.success(userService.getById(id));
     }
 
-
     @GetMapping("/stNum")
     public Result findByStNum(@RequestParam String stNum , @RequestParam String role) {
         return Result.success(userService.findByStNum(stNum,role));
     }
-
 
     @GetMapping("/username/{username}")
     public Result findByUsername(@PathVariable String username) {
@@ -151,13 +145,11 @@ public class UserController {
         return Result.success(userService.getOne(queryWrapper));
     }
 
-
     @GetMapping("/page")
     public Result findPage(@RequestParam Integer pageNum,
                                @RequestParam Integer pageSize,
                                @RequestParam(defaultValue = "") String username,
                                 @RequestParam(defaultValue = "") String stNum) {
-
         IPage<User> page = new Page<>(pageNum,pageSize);
         QueryWrapper<User> queryWrapper = new QueryWrapper<>();
         if(!username.equals("") && username != null){
@@ -167,9 +159,6 @@ public class UserController {
             queryWrapper.eq("st_num", stNum);
         }
             return Result.success(userService.page(page,queryWrapper));
-
-
-
     }
 
     @PostMapping("/student-teacher")

@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 
 @Component
-public class TokenUtils {
+public class  TokenUtils {
 
     private static IUserService staticUserService;
 

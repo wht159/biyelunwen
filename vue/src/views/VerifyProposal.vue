@@ -46,12 +46,12 @@
 
     <!--    用户新增表单-->
     <el-dialog title="审核信息" :visible.sync="VerifyFormVisible" width="30%" >
-      <el-form label-width="80px" size="small">
-        <el-form-item label="审核结果">
+      <el-form label-width="80px" size="small"  :model="form" :rules="rules" ref="form">
+        <el-form-item label="审核结果" prop="state">
           <el-radio v-model="form.state" label="true" border>通过</el-radio>
           <el-radio v-model="form.state" label="false" border>不通过</el-radio>
         </el-form-item>
-        <el-form-item label="审核意见">
+        <el-form-item label="审核意见" prop="comment">
           <el-input type="textarea":rows="7" v-model="form.comment" style="width: 100%" ></el-input>
         </el-form-item>
       </el-form>
@@ -75,6 +75,10 @@ export default {
 
   data() {
     return {
+      rules:{
+        state: {required: true, message: '请选择审核结果', trigger: 'change'},
+        comment:{required: true, message: '请输入审核意见', trigger: 'blur'},
+      },
       VerifyFormVisible:false,
       tableData: [],
       teaNum: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")).stNum : "",
@@ -119,6 +123,8 @@ export default {
       this.VerifyFormVisible = true
     },
     submit(){
+      this.$refs['form'].validate((valid) => {
+        if (valid) {  // 表单校验合法
       this.request.post("/verify", this.form).then(res => {
         if (res.code === '200') {
           this.$message.success("审核成功")
@@ -130,6 +136,8 @@ export default {
           this.form = {}
         }
       })
+        }
+      });
     }
   }
 }
