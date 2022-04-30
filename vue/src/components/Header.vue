@@ -10,8 +10,6 @@
     </div>
     <el-dropdown style="width: 150px; cursor: pointer; text-align: right">
       <div style="display: inline-block">
-        <img :src="user.avatarUrl" alt=""
-             style="width: 30px; border-radius: 50%; position: relative; top: 10px; right: 5px">
         <span>我的</span><i class="el-icon-arrow-down" style="margin-left: 5px"></i>
       </div>
       <el-dropdown-menu slot="dropdown" style="width: 100px; text-align: center">
