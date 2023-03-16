@@ -2,7 +2,7 @@
   <div>
     <el-form ref="form" :model="form" label-width="80px" :rules="rules" >
       <el-form-item label="课题名称" prop="name">
-        <el-input v-model="form.name"style="width: 40%"></el-input>
+        <el-input v-model="form.name"style="width: 40%" id="title_name"></el-input>
       </el-form-item>
       <el-form-item label="课题难度" prop="difficulty">
         <el-select v-model="form.difficulty" placeholder="请选择课题难度" >
@@ -26,7 +26,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="课题摘要" prop="brief">
-        <el-input type="textarea":rows="5" v-model="form.brief" style="width: 40%" ></el-input>
+        <el-input type="textarea":rows="5" v-model="form.brief" style="width: 40%" id="title_abstract"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">发布课题</el-button>
@@ -61,12 +61,12 @@ export default {
         if (valid) {  // 表单校验合法
       this.request.post("/title", this.form).then(res => {
         if (res.code === '200') {
-          this.$message.success("发布成功")
+          this.$message.success("发布课题成功")
           this.form = {
             teaNum: ""
           }
         } else {
-          this.$message.error("发布成功")
+          this.$message.error("发布课题失败")
         }
       })
         }

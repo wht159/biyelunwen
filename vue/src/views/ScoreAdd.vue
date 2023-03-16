@@ -18,7 +18,7 @@
       </el-form-item>
 
       <el-form-item label="成绩" prop="score">
-        <el-input v-model="form.score" style="width: 200px"></el-input>
+        <el-input v-model="form.score"  id = "score" style="width: 200px"></el-input>
       </el-form-item>
 
       <el-form-item>

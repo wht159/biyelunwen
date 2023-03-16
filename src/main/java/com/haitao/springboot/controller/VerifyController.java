@@ -26,17 +26,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/verify")
 public class VerifyController {
-
     @Resource
     private IVerifyService verifyService;
-
     // 新增或者更新
     @PostMapping
     public Result save(@RequestBody Verify verify) {
         verifyService.saveOrUpdate(verify);
         return Result.success();
     }
-
 
     @GetMapping
     public Result findAll() {

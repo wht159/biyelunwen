@@ -2,7 +2,9 @@
   <div style="color: #666;font-size: 14px;">
     <div style="padding-bottom: 20px">
       <h1 style="text-align: -webkit-center; font-size: 25px;">毕业论文管理系统</h1>
-      <b>欢迎你！{{ name }}</b>
+      <b id="nickname">欢迎你！{{ name }}</b><br />
+      <b id="role">角色：{{ role }}</b>
+
     </div>
 
     <div style="height: 1px; background: #ddd; margin: 20px 0"/>
@@ -37,9 +39,11 @@
 <script>
 export default {
   name: "Home",
+  role: '用户',
   data() {
     return {
       name:'',
+      role:'',
       user: localStorage.getItem("user") ? JSON.parse(localStorage.getItem("user")) : {}
     }
   },
@@ -48,6 +52,7 @@ export default {
   },
   methods: {
     load() {
+      this.role = this.user.role
       this.request.get("/user/stNum", {
         params: {
           stNum : this.user.stNum,
@@ -55,6 +60,7 @@ export default {
         }
       }).then(res => {
         this.name = res.data.name
+        console.log(this.role)
       })
     },
 

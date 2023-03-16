@@ -45,6 +45,7 @@ public class SimHashUtils {
         // 1、分词（使用了外部依赖hankcs包提供的接口）
         List<String> keywordList = HanLP.extractKeyword(str, str.length());//取出所有关键词
         // hash
+        System.out.println("关键字"+keywordList);
         int size = keywordList.size();
         int i = 0;//以i做外层循环
         for(String keyword : keywordList){
